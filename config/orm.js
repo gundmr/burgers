@@ -1,5 +1,3 @@
-//Import and export complete - orm funciton may not work properly 
-
 //IMPORT connection.js
 var connection = require("../config/connection");
 
@@ -29,11 +27,11 @@ function printQuestionMarks(num) {
       var value = ob[key];
       // check to skip hidden properties
       if (Object.hasOwnProperty.call(ob, key)) {
-        // if string with spaces, add quotations (Lana Del Grey => 'Lana Del Grey')
+        // if string with spaces, add quotations
         if (typeof value === "string" && value.indexOf(" ") >= 0) {
           value = "'" + value + "'";
         }
-        // e.g. {name: 'Lana Del Grey'} => ["name='Lana Del Grey'"]
+
         // e.g. {sleepy: true} => ["sleepy=true"]
         arr.push(key + "=" + value);
       }
@@ -58,6 +56,7 @@ var orm = {
           console.log("selectAll: ", result);
         });
     },
+    //adding burger to DB
     insertOne: function(table, cols, vals, cb) {
         var queryString = "INSERT INTO" + table;
             queryString += " (";
@@ -78,7 +77,28 @@ var orm = {
                 console.log("insertInto: ", result);
             });
     },
-    updateOne: function(table, condition, cb) {
+
+    // Set burger devoured status to true.
+    updateOne: function(table, objColVals, condition, cb) {
+      var queryString = "UPDATE " + table;
+        queryString += " SET ";
+        queryString += objToSql(objColVals);
+        queryString += " WHERE ";
+        queryString += condition;
+  
+          console.log(queryString);
+  
+        connection.query(queryString, 
+          function(err, result) {
+          if (err) {
+                throw err
+              }
+            cb(result);
+          });
+      },
+
+    //delete
+    delete: function(table, condition, cb) {
         var queryString = "DELETE FROM " + table;
         queryString += " WHERE ";
         queryString += condition;
