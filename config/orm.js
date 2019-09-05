@@ -48,11 +48,14 @@ function printQuestionMarks(num) {
 var orm = {
     //Display all burgers in DB:
     selectAll: function(table, cb) {
-        var queryString = "SELECT * FROM ??" 
-        connection.query(queryString, [table], function(err, result) {
-            if (err) throw err;
-            cb(result);
-            console.log("selectAll: ", result);
+      var queryString = "SELECT * FROM " + table + ";";
+
+      connection.query(queryString, function(err, result) {
+          if (err) {
+              throw err;
+          }
+          cb(result);
+          console.log("selectAll: ", result);
         });
     },
     insertOne: function(table, cols, vals, cb) {
